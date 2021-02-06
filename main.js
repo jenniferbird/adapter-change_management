@@ -47,18 +47,18 @@ function mainOnObject() {
   connector.get( (data, error) => {
     console.log(`RESULTS:${JSON.stringify(data)}`  );
     console.log('error:' + error);
-    if (error) {
-      console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
-    }
-    console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
+  //  if (error) {
+  //    console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
+  //  }
+    console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`);
   });
 
   connector.post( (data, error) => {
     if (error) {
       console.error(`\nError returned from POST request:\n${JSON.stringify(error)}`);
     }
-    console.log(`\nResponse returned from POST request:\n${JSON.stringify(data)}`)
-    console.log('RESULTS:' + data)
+    console.log(`\nResponse returned from POST request:\n${JSON.stringify(data)}`);
+    console.log('RESULTS:' + data);
     console.log('error:' + error);
   });
 

@@ -56,7 +56,7 @@ class ServiceNowConnector {
    *   Will be HTML text if hibernating instance.
    * @param {error} callback.error - The error property of callback.
    */
-  get(callback) {
+  get() {
     let getCallOptions = { ...this.options };
     const myOptions = {method: 'GET',
                        query: 'sysparm_limit=1',
@@ -67,7 +67,7 @@ class ServiceNowConnector {
   //    console.log('get:getCallOptions.method: ' + myOptions.method);
   //    console.log('get:getCallOptions.query: ' + myOptions.query);
   //    console.log('gett:getCallOptions.serviceNowTable: ' + myOptions.serviceNowTable);
-  this.sendRequest(myOptions, (results, error) => callback(results, error));
+  this.sendRequest(myOptions, (results, error) => (results, error));
     //getCallOptions.method = 'GET';
     //getCallOptions.query = 'sysparm_limit=1';
     //this.sendRequest(getCallOptions, (results, error) => callback(results, error));
@@ -88,7 +88,7 @@ class ServiceNowConnector {
  *   Will be HTML text if hibernating instance.
  * @param {error} callback.error - The error property of callback.
  */
-post(callback) {
+post() {
     let getCallOptions = { ...this.options };
     const myOptions = {method: 'POST',
                        query: '',
@@ -96,7 +96,7 @@ post(callback) {
                        username: getCallOptions.username,
                        password: getCallOptions.password,
                        url: getCallOptions.url};
-  this.sendRequest(myOptions, (data, error) => callback(data, error));
+  this.sendRequest(myOptions, (data, error) => (data, error));
 }
 
 
@@ -113,14 +113,14 @@ post(callback) {
    *
    * @return {string} ServiceNow URL
  */
-constructUri() {
+constructUri(serviceNowTable, query = null) {
     let getCallOptions = { ...this.options };
   //let uri = `/api/now/table/` + getCallOptions.serviceNowTable;
   let uri = `/api/now/table/${getCallOptions.serviceNowTable}`;
-  if ( getCallOptions.query) {
+  if ( query) {
     uri = uri + '?' + query;
   }
-  getCallOptions.uri = uri;
+  //getCallOptions.uri = uri;
   return uri;
 }
 
@@ -158,7 +158,7 @@ isHibernating(response) {
  *   Will be HTML text if hibernating instance.
  * @param {error} callback.error - The error property of callback.
  */
-processRequestResults(helpOptions,callback) {
+processRequestResults(helpOptions) {
   /**
    * You must build the contents of this function.
    * Study your package and note which parts of the get()
@@ -173,7 +173,7 @@ processRequestResults(helpOptions,callback) {
  //     console.log('processRequestResults:gethelpOptions.error:' + helpOptions.error);
     // Initialize return arguments for callback
   let processedResults = null;
-  let processedError = 'XXX';
+  let processedError = null;
 
     if (helpOptions.error) {
       console.error('Error present.' + helpOptions.error);//'Error present.');
@@ -186,10 +186,12 @@ processRequestResults(helpOptions,callback) {
       console.error(processedError);
     } else {
       processedResults = helpOptions.response;
+ //     callback.data = helpOptions.response;
     };
     
     console.log(' processedResults' +  processedResults);
     console.log(' processedError' +  processedError);
+ //   return  (callback.data, processedError);
     return  (processedResults, processedError);
 }
 
@@ -212,12 +214,12 @@ processRequestResults(helpOptions,callback) {
  *   Will be HTML text if hibernating instance.
  * @param {error} callback.error - The error property of callback.
  */
-sendRequest(myOptions,callback) {
+sendRequest(myOptions) {
     let getCallOptions = { ...this.options };
   // Initialize return arguments for callback
   let uri;
   //    console.log('sendRequest:getCallOptions.method: ' + myOptions.method);
-  //    console.log('sendRequest:getCallOptions.query: ' + myOptions.query);
+     console.log('sendRequest:getCallOptions.query: ' + myOptions.query);
   //    console.log('sendRequest:getCallOptions.serviceNowTable: ' + myOptions.serviceNowTable);
   if (myOptions.query){
     uri = this.constructUri(getCallOptions.serviceNowTable, myOptions.query);
@@ -242,16 +244,17 @@ sendRequest(myOptions,callback) {
     uri: uri};
   request(requestOptions, (error, response, body) => {
   //    console.log(' request.response.error:' + error);
-  //    console.log(' request.response.response:' + response);
+  //    console.log(`\nResponse returned from POST request:\n${JSON.stringify(response)}`);
   //    console.log(' request.response.body:' + body);
       const helpOptions = {error: error,
                            response: response,
                            body: body,
                            statusCode: response.statusCode};
+    //    console.log('response:' + response);
     //  console.log(' helpOptions.statusCode:' + helpOptions.statusCode);
 
     //this.processRequestResults(error, response, body);
-    this.processRequestResults(helpOptions, (data, error) =>  callback(data, error));
+    this.processRequestResults(helpOptions, (data, error) => (data, error));
     //this.sendRequest(getCallOptions, (processedResults, processedError) => callback(processedResults, processedError));
   });
 }
