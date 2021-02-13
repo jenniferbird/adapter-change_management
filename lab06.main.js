@@ -187,23 +187,7 @@ healthcheck(callback) {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-     //connector.get((data, error) => callback(data, error));
-     connector.get((data, error) => {
-         if (data.body.includes('result') ) {        
-          const objdata = JSON.parse(data.body);          
-  /**
-   * build the requestData object.
-   */
-  const requestData  = { change_ticket_number: objdata.number,
-    active: objdata.active,
-    priority: objdata.priority,
-    description: objdata.description,
-    work_start: objdata.work_start,
-    work_end: objdata.work_end,
-    change_ticket_key: objdata.sys_id};
-    }
-    return callback(requestData,error);
-     });
+     connector.get((data, error) => callback(data, error));
   }
 
   /**
@@ -222,23 +206,7 @@ healthcheck(callback) {
      * Note how the object was instantiated in the constructor().
      * post() takes a callback function.
      */
- //    connector.post((data, error) => callback(data, error));
-     connector.post((data, error) =>  {
-         if (data.body.includes('result') ) {        
-          const objdata = JSON.parse(data.body);          
-  /**
-   * build the requestData object.
-   */
-  const requestData  = { change_ticket_number: objdata.number,
-    active: objdata.active,
-    priority: objdata.priority,
-    description: objdata.description,
-    work_start: objdata.work_start,
-    work_end: objdata.work_end,
-    change_ticket_key: objdata.sys_id};
-    }
-    return callback(requestData,error);
-     });
+     connector.post((data, error) => callback(data, error));
   }
 }
 
